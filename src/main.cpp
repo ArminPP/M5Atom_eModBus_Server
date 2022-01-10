@@ -20,6 +20,38 @@ SERVER ISSUES:
   - USB2RS485 Adapter no external VCC! -> kills/resets USB from Notebook!
 
 
+
+MODBUS Basics:
+**************
+
+https://ipc2u.de/artikel/wissenswertes/modbus-rtu-einfach-gemacht-mit-detaillierten-beschreibungen-und-beispielen/
+
+REGISTERNUMMER	REGISTERADRESSE HEX	    TYP	                  NAME	                   TYP
+1-9999	        0000 to 270E	      lesen-schreiben	  Discrete Output Coils	            DO
+10001-19999	    0000 to 270E	      lesen	            Discrete Input Contacts	          DI
+30001-39999	    0000 to 270E	      lesen	            Analog Input Registers	          AI
+40001-49999	    0000 to 270E	      lesen-schreiben	  Analog Output Holding Registers	  AO
+
+FUNKTIONSKODE	                FUNKTION   	                                                    WERTTYP	  ZUGRIFFSTYP
+01 (0x01)	      Liest DO	                  Read Discrete Output Coil	                        Diskret	    Lesen
+02 (0x02)	      Liest DI	                  Read Discrete Input Contact	                      Diskret	    Lesen
+03 (0x03)	      Liest AO	                  Read Analog Output Holding Register	              16 Bit	    Lesen
+04 (0x04)	      Liest AI	                  Read Analog Input Register	                      16 Bit	    Lesen
+05 (0x05)	      Schreibt ein DO	            Setzen einer Discrete Output Coil	                Diskret	    Schreiben
+06 (0x06)	      Schreibt ein AO	            Setzen eines Analog Output Holding Registers	    16 Bit	    Schreiben
+15 (0x0F)	      Aufzeichnung mehrerer DOs	  Setzen mehrerer Discrete Output Coil	            Diskret	    Schreiben
+16 (0x10)	      Aufzeichnung mehrerer AOs	  Setzen mehrerer Analog Output Holding Registers	  16 Bit	    Schreiben
+
+####################################################################
+#   The maximum packet sizes are:                                  #
+#        Read registers (function codes 03 & 04)   = 125 registers #
+#        Write registers (function code 16)        = 123 registers #
+#        Read Booleans (function codes 01 & 02)    = 2000 bits     #
+#        Write Booleans (function code 15)         = 1968 bits     #
+####################################################################
+
+Modbus Client == Master
+Modbus Server == Slave
 */
 
 #include <Arduino.h>
