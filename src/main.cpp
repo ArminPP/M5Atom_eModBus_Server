@@ -63,7 +63,7 @@ Modbus Server == Slave
 
 #define SERVER_ID 27
 
-uint16_t data  =  0;
+uint16_t data = 0;
 
 // Create a ModbusRTU server instance listening on Serial2 with 2000ms timeout
 ModbusServerRTU MBserver(Serial2, 2000);
@@ -79,20 +79,20 @@ ModbusMessage FC03(ModbusMessage request)
   request.get(2, address); // 2
   request.get(4, words);   // 4
 
-  // Serial.printf("------------------------ adress: %i  words:%i\n", address, words);
+  Serial.printf("------------------------ adress: %i  words:%i\n", address, words);
   // LOG_I("------------------------ adress: %i  words:%i\n", address, words);
 
   // Address and words valid? We assume 8 registers here for demo
   if (address && words && (address + words)) // <= SERVER_NUM_VALUES
   {
     // Looks okay. Set up message with serverID, FC and length of data
-    // Serial.printf("------------------------ serverID: %i  FC:%i length:%i \n", request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
+    Serial.printf("------------------------ serverID: %i  FC:%i length:%i \n", request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
     response.add(request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
     // Fill response with requested data
     for (uint16_t i = address; i < address + words; ++i)
     {
       response.add(data++);
-      // Serial.printf("------------------------  response.add%i\n", i);
+      Serial.printf("------------------------  response.add %i\n", data);
     }
   }
   else
@@ -108,6 +108,8 @@ void setup()
 {
   M5.begin();
 
+  M5.dis.drawpix(0, 0, 0xff3300); // RED
+
   // Init Serial monitor
   Serial.begin(115200);
   Serial.println("\nPress some serial key or M5 Button to start program"); // DEBUG
@@ -120,6 +122,8 @@ void setup()
     }
   }
   Serial.println("OK"); // DEBUG
+
+  M5.dis.drawpix(0, 0, 0x00ff00); // green
 
   // Init Serial2 connected to the RTU Modbus
   // (Fill in your data here!)
@@ -135,5 +139,12 @@ void setup()
 // loop() - nothing done here today!
 void loop()
 {
-  delay(10000);
+  for (uint16_t i = 0; i < 20; ++i) // DELAY of 10s !
+  {
+    M5.dis.drawpix(0, 0, 0x0000cc); // blue
+    delay(250);
+    M5.dis.drawpix(0, 0, 0x00ff00); // green
+    delay(250);
+  }
+  Serial.println("                           DELAY (10s)"); // DEBUG
 }
