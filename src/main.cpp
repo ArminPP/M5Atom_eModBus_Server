@@ -61,7 +61,7 @@ Modbus Server == Slave
 #include "ModbusServerRTU.h"
 #include "Logging.h"
 
-#define SERVER_ID 27
+#define SERVER_ID 25
 
 uint16_t data = 0;
 
@@ -85,6 +85,7 @@ ModbusMessage FC03(ModbusMessage request)
   // Address and words valid? We assume 8 registers here for demo
   if (address && words && (address + words)) // <= SERVER_NUM_VALUES
   {
+    M5.dis.drawpix(0, 0, 0xff3300); // RED
     // Looks okay. Set up message with serverID, FC and length of data
     Serial.printf("------------------------ serverID: %i  FC:%i length:%i \n", request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
     response.add(request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
@@ -106,22 +107,21 @@ ModbusMessage FC03(ModbusMessage request)
 // Setup() - initialization happens here
 void setup()
 {
-  M5.begin();
-
-  M5.dis.drawpix(0, 0, 0xff3300); // RED
+  M5.begin(true, true, true);
 
   // Init Serial monitor
   Serial.begin(115200);
-  Serial.println("\nPress some serial key or M5 Button to start program"); // DEBUG
-  while (Serial.available() == 0)
-  {
-    M5.update();
-    if (M5.Btn.wasPressed())
-    { // if M5 Button was pressed, then also start...
-      break;
-    }
-  }
-  Serial.println("OK"); // DEBUG
+  Serial.printf("\nModBus serverID: %3i", SERVER_ID);
+  // Serial.println("\nPress some serial key or M5 Button to start program"); // DEBUG
+  // while (Serial.available() == 0)
+  // {
+  //   M5.update();
+  //   if (M5.Btn.wasPressed())
+  //   { // if M5 Button was pressed, then also start...
+  //     break;
+  //   }
+  // }
+  // Serial.println("OK"); // DEBUG
 
   M5.dis.drawpix(0, 0, 0x00ff00); // green
 
@@ -146,5 +146,5 @@ void loop()
     M5.dis.drawpix(0, 0, 0x00ff00); // green
     delay(250);
   }
-  Serial.println("                           DELAY (10s)"); // DEBUG
+  Serial.printf("Delay 10s == ModBus serverID: %3i\n", SERVER_ID);
 }
