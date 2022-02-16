@@ -61,7 +61,7 @@ Modbus Server == Slave
 #include "ModbusServerRTU.h"
 #include "Logging.h"
 
-#define SERVER_ID 25
+#define SERVER_ID 26
 
 uint16_t data = 0;
 
@@ -85,7 +85,6 @@ ModbusMessage FC03(ModbusMessage request)
   // Address and words valid? We assume 8 registers here for demo
   if (address && words && (address + words)) // <= SERVER_NUM_VALUES
   {
-    M5.dis.drawpix(0, 0, 0xff3300); // RED
     // Looks okay. Set up message with serverID, FC and length of data
     Serial.printf("------------------------ serverID: %i  FC:%i length:%i \n", request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
     response.add(request.getServerID(), request.getFunctionCode(), (uint8_t)(words * 2));
@@ -94,6 +93,7 @@ ModbusMessage FC03(ModbusMessage request)
     {
       response.add(data++);
       Serial.printf("------------------------  response.add %i\n", data);
+    M5.dis.drawpix(0, 0, 0xff3300); // RED
     }
   }
   else
@@ -139,6 +139,24 @@ void setup()
 // loop() - nothing done here today!
 void loop()
 {
+
+  // static bool blink = false;
+  // static unsigned long LoopPM = 0;
+  // unsigned long LoopCM = millis();
+  // if (LoopCM - LoopPM >= (1000 * 1))
+  // {
+  //   if ((blink = !blink))
+  //   {
+  //     M5.dis.drawpix(0, 0, 0x0000cc); // blue
+  //   }
+  //   else
+  //   {
+  //     M5.dis.drawpix(0, 0, 0x00ff00); // green
+  //   }
+  // }
+  // // --------  Loop end ----------------------------------------------------------------
+  // LoopPM = LoopCM;
+
   for (uint16_t i = 0; i < 20; ++i) // DELAY of 10s !
   {
     M5.dis.drawpix(0, 0, 0x0000cc); // blue
